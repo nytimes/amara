@@ -1,7 +1,6 @@
 package amara
 
 import (
-	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -16,12 +15,6 @@ type Client struct {
 	*http.Client
 }
 
-type ReqParams struct {
-	Method string
-	URL    string
-	Body   io.Reader
-}
-
 func NewClient(username, apiKey, team string) *Client {
 	return &Client{
 		username,
@@ -34,9 +27,8 @@ func NewClient(username, apiKey, team string) *Client {
 	}
 }
 
-func (c *Client) doRequest(params ReqParams) ([]byte, error) {
-	fmt.Println(params.URL)
-	req, err := http.NewRequest(params.Method, params.URL, params.Body)
+func (c *Client) doRequest(method, url string, body io.Reader) ([]byte, error) {
+	req, err := http.NewRequest(method, url, body)
 	if err != nil {
 		return nil, err
 	}
