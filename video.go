@@ -176,7 +176,7 @@ func (c *Client) UpdateLanguage(videoID, langCode string, complete bool) (*Langu
 	params := url.Values{}
 	params.Add("subtitles_complete", strconv.FormatBool(complete))
 	data, err := c.doRequest(
-		"Put",
+		"PUT",
 		fmt.Sprintf("%s/videos/%s/languages/%s/", c.endpoint, videoID, langCode),
 		strings.NewReader(params.Encode()),
 	)
