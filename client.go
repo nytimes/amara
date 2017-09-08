@@ -1,6 +1,7 @@
 package amara
 
 import (
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -39,12 +40,17 @@ func (c *Client) doRequest(method, url string, body io.Reader) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	//TODO: check for res.Status to handle http errors, e.g. sending the same video twice will
-	// result in a 400
+
 	defer res.Body.Close()
 	data, err := ioutil.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
 	}
+
+	if res.StatusCode >= 400 {
+		// TODO: parse the data
+		return nil, fmt.Errorf("status %d: %s", res.StatusCode, data)
+	}
+
 	return data, nil
 }
