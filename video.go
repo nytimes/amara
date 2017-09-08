@@ -228,11 +228,3 @@ func (c *Client) GetSubtitles(videoID, langCode string) (*Subtitles, error) {
 	}
 	return &subtitle, nil
 }
-
-//func (c *Client) List() ([]*Video, error) {
-//	data, err := c.doRequest(ReqParams{"GET", c.endpoint})
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//}
