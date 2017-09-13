@@ -106,6 +106,10 @@ type Subtitles struct {
 	VersionNo        int    `json:"version_no"`
 }
 
+type EditorLoginSession struct {
+	URL string `json:"url"`
+}
+
 func (c *Client) GetVideo(id string) (*Video, error) {
 	data, err := c.doRequest("GET", fmt.Sprintf("%s/videos/%s/", c.endpoint, id), nil)
 	if err != nil {
@@ -227,4 +231,27 @@ func (c *Client) GetSubtitles(videoID, langCode string) (*Subtitles, error) {
 		return nil, err
 	}
 	return &subtitle, nil
+}
+
+func (c *Client) EditorLogin(videoID, langCode, userName string) (*EditorLoginSession, error) {
+	params := url.Values{}
+	params.Set("video_id", videoID)
+	params.Set("user", userName)
+	params.Set("language_code", langCode)
+
+	data, err := c.doRequest(
+		"POST",
+		fmt.Sprintf("%s/editor-login/", c.endpoint),
+		bytes.NewBufferString(params.Encode()),
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	var editorSession EditorLoginSession
+	if err := json.Unmarshal(data, &editorSession); err != nil {
+		return nil, err
+	}
+
+	return &editorSession, nil
 }
