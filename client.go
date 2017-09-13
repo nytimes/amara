@@ -11,7 +11,7 @@ import (
 type Client struct {
 	username string
 	apiKey   string
-	Team     string
+	team     string
 	endpoint string
 	*http.Client
 }
