@@ -23,7 +23,7 @@ func NewClient(username, apiKey, team string) *Client {
 		team,
 		"https://amara.org/api",
 		&http.Client{
-			Timeout: time.Second * 15,
+			Timeout: time.Second * 3,
 		},
 	}
 }
