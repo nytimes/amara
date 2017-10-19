@@ -217,10 +217,10 @@ func (c *Client) CreateSubtitles(videoID, langCode, format string, params url.Va
 	return &subtitle, nil
 }
 
-func (c *Client) GetSubtitles(videoID, langCode string) (*Subtitles, error) {
+func (c *Client) GetSubtitles(videoID, langCode string, captionFormat string) (*Subtitles, error) {
 	data, err := c.doRequest(
 		"GET",
-		fmt.Sprintf("%s/videos/%s/languages/%s/subtitles/?sub_format=vtt", c.endpoint, videoID, langCode),
+		fmt.Sprintf("%s/videos/%s/languages/%s/subtitles/?sub_format=%s", c.endpoint, videoID, langCode, captionFormat),
 		nil,
 	)
 	if err != nil {
