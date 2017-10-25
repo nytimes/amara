@@ -5,7 +5,8 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"time"
+
+	"github.com/sethgrid/pester"
 )
 
 type Client struct {
@@ -13,18 +14,21 @@ type Client struct {
 	apiKey   string
 	team     string
 	endpoint string
-	*http.Client
+	*pester.Client
 }
 
 func NewClient(username, apiKey, team string) *Client {
+	httpClient := pester.New()
+	httpClient.Concurrency = 1
+	httpClient.MaxRetries = 5
+	httpClient.Backoff = pester.ExponentialBackoff
+	httpClient.KeepLog = true
 	return &Client{
 		username,
 		apiKey,
 		team,
 		"https://amara.org/api",
-		&http.Client{
-			Timeout: time.Second * 3,
-		},
+		httpClient,
 	}
 }
 
