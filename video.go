@@ -12,24 +12,18 @@ import (
 )
 
 type Language struct {
-	ID                     int         `json:"id"`
-	Created                time.Time   `json:"created"`
-	LanguageCode           string      `json:"language_code"`
-	IsPrimaryAudioLanguage bool        `json:"is_primary_audio_language"`
-	IsRtl                  bool        `json:"is_rtl"`
-	IsTranslation          bool        `json:"is_translation"`
-	Published              bool        `json:"published"`
-	OriginalLanguageCode   interface{} `json:"original_language_code"`
-	Name                   string      `json:"name"`
-	Title                  string      `json:"title"`
-	Description            string      `json:"description"`
-	Metadata               struct {
+	ID                   int         `json:"id"`
+	Created              time.Time   `json:"created"`
+	LanguageCode         string      `json:"language_code"`
+	OriginalLanguageCode interface{} `json:"original_language_code"`
+	Name                 string      `json:"name"`
+	Title                string      `json:"title"`
+	Description          string      `json:"description"`
+	Metadata             struct {
 		SpeakerName string `json:"speaker-name"`
 		Location    string `json:"location"`
 	} `json:"metadata"`
-	SubtitleCount     int  `json:"subtitle_count"`
-	SubtitlesComplete bool `json:"subtitles_complete"`
-	Versions          []struct {
+	Versions []struct {
 		Author struct {
 			Username string `json:"username"`
 			ID       string `json:"id"`
@@ -38,10 +32,16 @@ type Language struct {
 		Published bool `json:"published"`
 		VersionNo int  `json:"version_no"`
 	} `json:"versions"`
-	SubtitlesURI string `json:"subtitles_uri"`
-	ResourceURI  string `json:"resource_uri"`
-	NumVersions  int    `json:"num_versions"`
-	IsOriginal   bool   `json:"is_original"`
+	SubtitlesURI           string `json:"subtitles_uri"`
+	ResourceURI            string `json:"resource_uri"`
+	NumVersions            int    `json:"num_versions"`
+	SubtitleCount          int    `json:"subtitle_count"`
+	SubtitlesComplete      bool   `json:"subtitles_complete"`
+	IsPrimaryAudioLanguage bool   `json:"is_primary_audio_language"`
+	IsRtl                  bool   `json:"is_rtl"`
+	IsTranslation          bool   `json:"is_translation"`
+	Published              bool   `json:"published"`
+	IsOriginal             bool   `json:"is_original"`
 }
 
 type Video struct {
