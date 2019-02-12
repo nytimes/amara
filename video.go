@@ -198,7 +198,7 @@ func (c *Client) UpdateLanguage(videoID, langCode string, complete bool) (*Langu
 
 func (c *Client) CreateSubtitles(videoID, langCode, format string, params url.Values) (*Subtitles, error) {
 	if params == nil {
-		return nil, errors.New("Please provide the request body parameters")
+		return nil, errors.New("please provide the request body parameters")
 	}
 
 	params.Set("sub_format", format)
