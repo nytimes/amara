@@ -8,4 +8,6 @@ install:
 script:
   - golangci-lint run --enable-all -D errcheck -D lll -D dupl -D gochecknoglobals --deadline 5m
 env:
-  - GO111MODULE=on
+  global:
+    - GO111MODULE=on
+    - GOPROXY=https://proxy.golang.org
