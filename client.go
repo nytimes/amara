@@ -1,4 +1,4 @@
-package amara // import "github.com/NYTimes/amara"
+package amara // import "github.com/nytimes/amara"
 
 import (
 	"fmt"

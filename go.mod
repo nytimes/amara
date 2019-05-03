@@ -1,4 +1,4 @@
-module github.com/NYTimes/amara
+module github.com/nytimes/amara
 
 go 1.12
 
