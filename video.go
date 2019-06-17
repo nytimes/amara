@@ -74,7 +74,7 @@ type Video struct {
 type SubtitleInfo struct {
 	VersionNumber   int        `json:"version_number"`
 	SubFormat       string     `json:"sub_format"`
-	Subtitles       []Subtitle `json:"subtitles"`
+	Subtitles       []Subtitle `json:"subtitles"` //nolint:govet
 	SubtitlesString string     `json:"subtitles"` // could be a string or an array depending on format
 	Author          struct {
 		Username string `json:"username"`
