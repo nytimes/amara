@@ -1,4 +1,4 @@
-package amara // import "github.com/nytimes/amara" //nolint:typecheck
+package amara // import "github.com/nytimes/amara"
 
 import (
 	"fmt"
