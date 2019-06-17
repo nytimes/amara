@@ -12,7 +12,6 @@ import (
 )
 
 type Language struct {
-	ID                   int         `json:"id"`
 	Created              time.Time   `json:"created"`
 	LanguageCode         string      `json:"language_code"`
 	OriginalLanguageCode interface{} `json:"original_language_code"`
@@ -34,21 +33,17 @@ type Language struct {
 	} `json:"versions"`
 	SubtitlesURI           string `json:"subtitles_uri"`
 	ResourceURI            string `json:"resource_uri"`
-	NumVersions            int    `json:"num_versions"`
 	SubtitleCount          int    `json:"subtitle_count"`
 	SubtitlesComplete      bool   `json:"subtitles_complete"`
 	IsPrimaryAudioLanguage bool   `json:"is_primary_audio_language"`
 	IsRtl                  bool   `json:"is_rtl"`
-	IsTranslation          bool   `json:"is_translation"`
 	Published              bool   `json:"published"`
-	IsOriginal             bool   `json:"is_original"`
 }
 
 type Video struct {
 	ID                       string      `json:"id"`
 	VideoType                string      `json:"video_type"`
 	PrimaryAudioLanguageCode string      `json:"primary_audio_language_code"`
-	OriginalLanguage         string      `json:"original_language"`
 	Title                    string      `json:"title"`
 	Description              string      `json:"description"`
 	Duration                 int         `json:"duration"`
@@ -76,11 +71,12 @@ type Video struct {
 	ResourceURI          string `json:"resource_uri"`
 }
 
-type Subtitles struct {
-	VersionNumber int    `json:"version_number"`
-	SubFormat     string `json:"sub_format"`
-	Subtitles     string `json:"subtitles"`
-	Author        struct {
+type SubtitleInfo struct {
+	VersionNumber   int        `json:"version_number"`
+	SubFormat       string     `json:"sub_format"`
+	Subtitles       []Subtitle `json:"subtitles"`
+	SubtitlesString string     `json:"subtitles"` // could be a string or an array depending on format
+	Author          struct {
 		Username string `json:"username"`
 		ID       string `json:"id"`
 		URI      string `json:"uri"`
@@ -104,6 +100,19 @@ type Subtitles struct {
 	SiteURI          string `json:"site_uri"`
 	Video            string `json:"video"`
 	VersionNo        int    `json:"version_no"`
+}
+
+type Subtitle struct {
+	Endpoint int    `json:"endpoint"`
+	Meta     Meta   `json:"meta"`
+	Position int    `json:"position"`
+	Start    int    `json:"start"`
+	Text     string `json:"text"`
+}
+
+type Meta struct {
+	NewParagraph bool   `json:"new_paragraph"`
+	Region       string `json:"region"`
 }
 
 type EditorLoginSession struct {
@@ -196,7 +205,7 @@ func (c *Client) UpdateLanguage(videoID, langCode string, complete bool) (*Langu
 	return &lang, nil
 }
 
-func (c *Client) CreateSubtitles(videoID, langCode, format string, params url.Values) (*Subtitles, error) {
+func (c *Client) CreateSubtitles(videoID, langCode, format string, params url.Values) (*SubtitleInfo, error) {
 	if params == nil {
 		return nil, errors.New("please provide the request body parameters")
 	}
@@ -210,27 +219,39 @@ func (c *Client) CreateSubtitles(videoID, langCode, format string, params url.Va
 	if err != nil {
 		return nil, err
 	}
-	subtitle := Subtitles{}
+	subtitle := SubtitleInfo{}
 	if err = json.Unmarshal(data, &subtitle); err != nil {
 		return nil, err
 	}
 	return &subtitle, nil
 }
 
-func (c *Client) GetSubtitles(videoID, langCode string, captionFormat string) (*Subtitles, error) {
+func (c *Client) GetSubtitleInfo(videoID, langCode string) (*SubtitleInfo, error) {
 	data, err := c.doRequest(
 		"GET",
-		fmt.Sprintf("%s/videos/%s/languages/%s/subtitles/?sub_format=%s", c.endpoint, videoID, langCode, captionFormat),
+		fmt.Sprintf("%s/videos/%s/languages/%s/subtitles/", c.endpoint, videoID, langCode),
 		nil,
 	)
 	if err != nil {
 		return nil, err
 	}
-	subtitle := Subtitles{}
+	subtitle := SubtitleInfo{}
 	if err = json.Unmarshal(data, &subtitle); err != nil {
 		return nil, err
 	}
 	return &subtitle, nil
+}
+
+func (c *Client) GetRawSubtitles(videoID, langCode string, captionFormat string) ([]byte, error) {
+	data, err := c.doRequest(
+		"GET",
+		fmt.Sprintf("%s/videos/%s/languages/%s/subtitles/?format=%s", c.endpoint, videoID, langCode, captionFormat),
+		nil,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
 func (c *Client) EditorLogin(videoID, langCode, userName string) (*EditorLoginSession, error) {

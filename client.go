@@ -10,21 +10,19 @@ import (
 )
 
 type Client struct {
-	username string
 	apiKey   string
 	team     string
 	endpoint string
 	*pester.Client
 }
 
-func NewClient(username, apiKey, team string) *Client {
+func NewClient(apiKey, team string) *Client {
 	httpClient := pester.New()
 	httpClient.Concurrency = 1
 	httpClient.MaxRetries = 5
 	httpClient.Backoff = pester.ExponentialBackoff
 	httpClient.KeepLog = true
 	return &Client{
-		username,
 		apiKey,
 		team,
 		"https://amara.org/api",
@@ -37,8 +35,8 @@ func (c *Client) doRequest(method, url string, body io.Reader) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("X-api-username", c.username)
 	req.Header.Set("X-api-key", c.apiKey)
+	req.Header.Set("X-API-FUTURE", "20190619")
 	req.Header.Set("Content-type", "application/x-www-form-urlencoded")
 	res, err := c.Do(req)
 	if err != nil {
@@ -50,7 +48,6 @@ func (c *Client) doRequest(method, url string, body io.Reader) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	if res.StatusCode >= 400 {
 		// TODO: parse the data
 		return nil, fmt.Errorf("status %d: %s", res.StatusCode, data)
