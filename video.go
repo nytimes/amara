@@ -72,11 +72,10 @@ type Video struct {
 }
 
 type SubtitleInfo struct {
-	VersionNumber   int        `json:"version_number"`
-	SubFormat       string     `json:"sub_format"`
-	Subtitles       []Subtitle `json:"subtitles"` //nolint:govet
-	SubtitlesString string     `json:"subtitles"` // could be a string or an array depending on format
-	Author          struct {
+	VersionNumber int    `json:"version_number"`
+	SubFormat     string `json:"sub_format"`
+	Subtitles     string `json:"subtitles"`
+	Author        struct {
 		Username string `json:"username"`
 		ID       string `json:"id"`
 		URI      string `json:"uri"`
@@ -100,19 +99,6 @@ type SubtitleInfo struct {
 	SiteURI          string `json:"site_uri"`
 	Video            string `json:"video"`
 	VersionNo        int    `json:"version_no"`
-}
-
-type Subtitle struct {
-	Endpoint int    `json:"endpoint"`
-	Meta     Meta   `json:"meta"`
-	Position int    `json:"position"`
-	Start    int    `json:"start"`
-	Text     string `json:"text"`
-}
-
-type Meta struct {
-	NewParagraph bool   `json:"new_paragraph"`
-	Region       string `json:"region"`
 }
 
 type EditorLoginSession struct {
@@ -229,7 +215,7 @@ func (c *Client) CreateSubtitles(videoID, langCode, format string, params url.Va
 func (c *Client) GetSubtitleInfo(videoID, langCode string) (*SubtitleInfo, error) {
 	data, err := c.doRequest(
 		"GET",
-		fmt.Sprintf("%s/videos/%s/languages/%s/subtitles/", c.endpoint, videoID, langCode),
+		fmt.Sprintf("%s/videos/%s/languages/%s/subtitles/?sub_format=vtt", c.endpoint, videoID, langCode),
 		nil,
 	)
 	if err != nil {
