@@ -62,7 +62,6 @@ func (c *Client) SetRateLimitProtection(rlp RateLimitProtection) {
 }
 
 func (c *Client) doRequest(method, url string, body io.Reader) ([]byte, error) {
-	fmt.Println("Making amara request " + url)
 	if c.rateLimitProtection.triggered {
 		return nil, fmt.Errorf("Amara API is currently being rate limited. try again later")
 	}
@@ -119,8 +118,6 @@ func (r *RateLimitProtection) start(res *http.Response) error {
 	} else {
 		wait = time.Duration(math.Pow(2, float64(r.counter))) * r.MinRetryDuration
 	}
-
-	fmt.Printf("Wait time: %s\n\n", wait)
 
 	if wait < r.MinRetryDuration {
 		wait = r.MinRetryDuration
